@@ -1,0 +1,1940 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "NABERS API Techncial Documentation",
+    "description": "# NABERS API Technical Documentation\n\n## Introduction to the NABERS API Ecosystem\n\nThe NABERS (National Australian Built Environment Rating System) API ecosystem provides a comprehensive suite of tools for calculating, targeting, and retrieving building performance ratings. This collection documents the three main APIs available in the NABERS platform:\n\n### 1\\. Forward Rating Calculator API\n\nThe Forward Rating Calculator API allows users to calculate NABERS ratings for various building types based on actual energy or water consumption data. This API is ideal for building owners, facility managers, and sustainability professionals who want to assess their building's current performance according to the NABERS methodology.\n\n**Key Features:**\n\n- Calculate energy, water, indoor environment, and waste ratings\n    \n- Support for multiple building types (offices, hotels, shopping centers, data centers, etc.)\n    \n- Detailed performance metrics including greenhouse gas emissions, energy intensity, and benchmarking factors\n    \n- Integration with Renewable Energy Indicator (REI) calculations\n    \n\n### 2\\. Reverse Rating Calculator API\n\nThe Reverse Rating Calculator API enables users to determine the maximum energy or water consumption targets required to achieve a specific NABERS star rating. This is particularly useful for setting performance goals during building design, retrofits, or when establishing sustainability targets.\n\n**Key Features:**\n\n- Set target star ratings and calculate required consumption limits\n    \n- Support for the same building types as the Forward Calculator\n    \n- Detailed breakdown of energy sources (electricity, gas, diesel) or water consumption targets\n    \n- Emissions calculations for different scopes (1, 2, and 3)\n    \n\n### 3\\. Rating Register API\n\nThe Rating Register API provides access to all publicly available NABERS ratings in the database. This API allows users to query and retrieve certified ratings for different building types, making it valuable for market research, benchmarking, and compliance verification.\n\n**Key Features:**\n\n- Filter ratings by building type, rating type, and certification status\n    \n- Pagination support for handling large datasets\n    \n- Search for specific buildings using premise IDs\n    \n- Access to historical rating data\n    \n\n## Using the APIs Together\n\nThese three APIs can be used together to create powerful applications for building performance management:\n\n1. Use the **Rating Register API** to understand market benchmarks and identify high-performing buildings in specific sectors or locations\n    \n2. Apply the **Forward Rating Calculator API** to assess your building's current performance\n    \n3. Utilize the **Reverse Rating Calculator API** to set performance targets and determine the consumption reductions needed to achieve desired ratings\n    \n\nAll APIs require authentication via an API key passed in the `Ocp-Apim-Subscription-Key` header.\n\n---",
+    "contact": {},
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://data.nabers.gov.au"
+    },
+    {
+      "url": "https://data-dev.nabers.gov.au"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Rating register",
+      "description": "The Rating Register API is meant to provide a more automated way to allow users to read the data for public ratings without having to rely on manual updates. Using API would allow customer to programatically to read the data directly into their own built applications. The Rating Register API is an API that customer can call to retrieve all public ratings available in Perform based on specific parameters that will would be included in each call."
+    },
+    {
+      "name": "Forward Rating calculator",
+      "description": "## What is Rating Calculator?\n\nThe NABERS Rating Calculator API was developed to supersede our previous product _NABERS Equipped._ It is meant to provide a more automated way to allow users to calculate the data without having to rely on manual updates. Using the API would allow customer to programmatically calculate the data directly into their own built applications. The NABERS Rating Calculator API is an API that customer can call to retrieve the NABERS algorithm based on specific parameters that will be included in each call."
+    },
+    {
+      "name": "Reverse calculator",
+      "description": "## What is Reverse Rating Calculator?\n\nThe Reverse Rating calculators give you an indication of the maximum amount of energy and water your building can use to achieve your desired rating. Using the API would allow customer to programmatically calculate the data directly into their own built applications. The NABERS Reverse Rating Calculator API is an API that customer can call to retrieve the NABERS algorithm based on specific parameters that will be included in each call."
+    }
+  ],
+  "paths": {
+    "/ratingregisterapi": {
+      "get": {
+        "tags": [
+          "Rating register"
+        ],
+        "summary": "All certified office ratings",
+        "description": "## Overview\n\nThis request retrieves certified energy ratings for office buildings with pagination support.\n\n## Request Method and URL\n\n- **Method:** GET\n    \n- **URL:** [https://data.nabers.gov.au/ratingregisterapi](https://data.nabers.gov.au/ratingregisterapi)\n    \n\n## Headers\n\n| Key | Value | Description |\n| --- | --- | --- |\n| Ocp-Apim-Subscription-Key | `{{vault:API_KEY}}` | API subscription key (required) |\n\n## Query Parameters\n\n| Parameter | Description | Possible Values | Required/Optional |\n| --- | --- | --- | --- |\n| buildingType | Type of building for which ratings are requested | \"Office\", \"Shopping Centre\", \"Hotel\", \"Data Centre\", \"Apartment Building\", etc. | Required |\n| ratingType | Type of rating to retrieve | \"Energy\", \"Water\", \"Indoor Environment\", etc. | Required |\n| status | Status of the ratings to retrieve | \"Expired\", \"Certified - current\" | Optional |\n| pageNumber | Page number for pagination | Integer (1, 2, 3, etc.) | Optional |\n| pageSize | Number of results per page | Integer (e.g., 8, 10, 50, 200) | Optional |\n| premiseID | Filter results by specific premise ID | Valid premise ID | Optional |\n| fromDate | Start date for filtering ratings (YYYY-MM-DD) | Any valid date | Optional |\n\n## Notes\n\n- The API requires a valid subscription key\n    \n- Use pagination parameters to control the volume of data returned\n    \n- This request is configured to retrieve certified energy ratings for office buildings\n    \n- The response includes certified ratings based on the specific parameters provided\n    \n- Error messages will be returned if required parameters are missing or invalid\n    \n\n## References\n\nThis documentation is based on the NABERS Rating Register API specifications.\n\n[https://nabers.atlassian.net/wiki/spaces/nabersapi/pages/169443329/NABERS+APIs](https://nabers.atlassian.net/wiki/spaces/nabersapi/pages/169443329/NABERS+APIs)",
+        "operationId": "allCertifiedOfficeRatings",
+        "parameters": [
+          {
+            "name": "buildingType",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "Office"
+            }
+          },
+          {
+            "name": "ratingType",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "energy"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "Certified - current"
+            }
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "200"
+            }
+          },
+          {
+            "name": "ocp-apim-subscription-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "{{vault:API_KEY}}"
+            }
+          },
+          {
+            "name": "fromDate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "2024-01-01"
+            }
+          },
+          {
+            "name": "premiseID",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "P0963"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "examples": {
+                "All certified office ratings": {
+                  "value": ""
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {}
+        ]
+      }
+    },
+    "/ratingcalculator/calculate": {
+      "post": {
+        "tags": [
+          "Forward Rating calculator"
+        ],
+        "summary": "Office Base Building Energy",
+        "description": "# Office Base Building Energy Rating Calculator\n\n## Overview\n\nThis POST request calculates NABERS energy ratings for office base buildings based on provided building characteristics and energy consumption data. The NABERS (National Australian Built Environment Rating System) Energy rating assesses the energy efficiency of office buildings on a scale of 0 to 6 stars, with 6 stars representing market-leading performance.\n\n## Request Method and URL\n\n- **Method:** POST\n    \n- **URL:** `https://data.nabers.gov.au/ratingcalculator/calculate`\n    \n\n## Headers\n\n| Key | Value | Description |\n| --- | --- | --- |\n| Ocp-Apim-Subscription-Key | `****` (masked) | API subscription key (required) |\n| Authorization | Bearer | Bearer token for authentication (required) |\n\n## Required Headers\n\n| Header Name | Value | Description |\n| --- | --- | --- |\n| Ocp-Apim-Subscription-Key | {{vault:API_KEY}} | API subscription key for authentication |\n\n## Request Body\n\nThe request body is a JSON object containing two main sections:\n\n1. Control Object - Contains basic information about the building\n    \n2. RatingInputs Object - Contains building characteristics data and detailed energy consumption\n    \n\n### Control Object\n\n| Parameter | Type | Description | Example |\n| --- | --- | --- | --- |\n| Postcode | String | Postal code of the building location | \"2150\" |\n| PremiseType | String | Type of premise (must be \"Office\" for this endpoint) | \"Office\" |\n| RatingScope | String | Scope of the rating (Base, Whole, Tenancy) | \"Base\" |\n| RatingType | String | Type of rating (Energy, Water, IE, Waste) | \"Energy\" |\n| SiteName | String | Name of the building/site | \"4 Parramatta Square\" |\n| EmailAddress | String | Contact email for notifications | \"example@environment.nsw.gov.au\" |\n| CompanyName | String | Name of the company requesting the rating | \"DPE\" |\n| BuildingAddress | String | Physical address of the building | \"12 Darcy street, Parramatta NSW - 2150\" |\n\n### RatingInputs Object\n\n| Parameter | Type | Description | Example |\n| --- | --- | --- | --- |\n| TotalArea | Number | Total net lettable area in square meters | 400 |\n| TotalHours | Number | Total operational hours per week | 50 |\n| TotalComputerCount | Number | Number of computers in the building | 267 |\n| totalOREGConsumption | Number | Total onsite renewable electricity generation consumption | 54212.97 |\n| netOREGConsumption | Number | Net onsite renewable electricity generation consumption | 54212.97 |\n| totalOnsiteLGCsExported | Number | Total onsite Large-scale Generation Certificates exported | 10 |\n| totalOffsitePurchases | Number | Total offsite energy purchases | 10000 |\n| totalElectricityInclusions | Number | Total electricity inclusions in MJ | 1274457.25 |\n| totalElectricityExclusions | Number | Total electricity exclusions in MJ | 719565.14 |\n| totalGasAndLPGInclusions | Number | Total gas and LPG inclusions in MJ | 2996857.54 |\n| totalGasAndLPGExclusions | Number | Total gas and LPG exclusions in MJ | 450.55 |\n| totalGreenPowerConsumption | Number | Total GreenPower consumption | 55027.92 |\n| totalGreenPowerPurchasedSeperately | Number | Total GreenPower purchased separately | 3000 |\n| offsiteLGCsSurrendered | Number | Offsite Large-scale Generation Certificates surrendered | 333.123 |\n| EnergyInputs | Object | Breakdown of energy inputs by type | See below |\n\n#### EnergyInputs Object\n\n| Parameter | Type | Description | Example |\n| --- | --- | --- | --- |\n| Electricity | Number | Electricity consumption in MJ | 31922.8 |\n| GreenPower | Number | GreenPower consumption in MJ | 30 |\n| Gas | Number | Gas consumption in MJ | 5000 |\n| Diesel | Number | Diesel consumption in MJ | 30 |\n\n## Expected Response\n\nThe response is a JSON object containing the calculated NABERS rating and related information:\n\n``` json\n{\n        \"waterResults\": null,\n        \"sequence\": 1,\n        \"requestId\": null,\n        \"lstExceptions\": null,\n        \"ieResults\": null,\n        \"energyResults\": {\n            \"totalRenewableElectricity\": 95178.31,\n            \"totalPredictedEmissions\": null,\n            \"totalEnergyUse\": 121080.08,\n            \"totalEmissionsScope12WithRenewableElectricity\": 416619.62,\n            \"totalEmissionsScope123WithRenewableElectricity\": 473237.1,\n            \"starRatingGranular\": null,\n            \"starRatingDecimal\": null,\n            \"starRating\": null,\n            \"sectorComparisonDial\": null,\n            \"rETAndStateTerritoryTargetsREIPercent\": 1.5,\n            \"rETAndStateTerritoryTargets\": 20965.34,\n            \"rEIResultPercentDecimal\": 6.6,\n            \"rEIResultPercent\": 7,\n            \"referenceData\": null,\n            \"predictedMedianITEnergy\": null,\n            \"predictedMedianInfrastructure\": null,\n            \"predictedGreenhouseGasIntensity\": null,\n            \"performanceIndicatorResult\": null,\n            \"otherVoluntaryPurchasesREIPercent\": 23.8,\n            \"otherVoluntaryPurchases\": 343123.0,\n            \"onsiteRenewableElectricityREIPercent\": 3.8,\n            \"onsiteRenewableElectricity\": 54212.97,\n            \"nonRenewableElectricityREIPercent\": 35.6,\n            \"nonRenewableElectricity\": 513926.77,\n            \"noGreenPowerStarRatingGranular\": 5.0,\n            \"noGreenPowerStarRatingDecimal\": 5.076739139011157,\n            \"noGreenPowerStarRating\": 5.0,\n            \"noGreenPowerPredictedGHGIntensity\": null,\n            \"noGreenPowerGHGIntensityScope123\": 56.9260875,\n            \"noGreenPowerGHGIntensityScope12\": 53.519974000000005,\n            \"noGreenPowerGHGEmissionsScope123\": 22770.435,\n            \"noGreenPowerGHGEmissionsScope12\": 21407.9896,\n            \"noGreenPowerBenchmarkingFactor\": 53.17306818736982,\n            \"greenPowerREIPercent\": 4.0,\n            \"greenpowerPercentage\": null,\n            \"greenPower\": 58027.92,\n            \"greenHousGasEmissionLPG\": null,\n            \"greenHousGasEmissionGas\": null,\n            \"greenHousGasEmissionElectricity\": null,\n            \"greenHousGasEmissionDiesel\": null,\n            \"greenHousGasEmissionCoal\": null,\n            \"greenHouseGasIntensityScope12WithRenewableElectricity\": 1041.55,\n            \"greenHouseGasIntensityScope123WithRenewableElectricity\": 1183.09,\n            \"greenhouseGasIntensityScope123\": 40.1666175,\n            \"greenhouseGasIntensityScope12\": 37.718188,\n            \"greenhouseGasEmissionsScope123\": 16066.646999999999,\n            \"greenhouseGasEmissionsScope12\": 15087.2752,\n            \"gasAndLPGREIPercent\": 57.7,\n            \"energyIntensity\": 302.0,\n            \"emissionFactorElectricity\": 0.66,\n            \"dieselREIPercent\": 0.0,\n            \"calculatedPUE\": null,\n            \"benchmarkingFactor\": 37.597352573986925,\n            \"actualEmissionsWoGP\": null,\n            \"actualEmissions\": null\n        }\n\n ```\n\n### Response Fields\n\n| Field | Description |\n| --- | --- |\n| StarRating | The calculated NABERS star rating (0-6 scale) |\n| RatedArea | The area used in the rating calculation |\n| RatedHours | The hours used in the rating calculation |\n| NormalizedEnergyMJ | Normalized energy consumption in megajoules |\n| EnergyIntensity | Energy intensity metric |\n| Benchmark | Benchmark value for comparison |\n| RatingScore | Numerical rating score |\n| Messages | Array of information or error messages |\n\n## Notes\n\n- The API requires a valid subscription key\n    \n- The response includes both the star rating and detailed calculation metrics\n    \n- Error messages will be returned if required parameters are missing or invalid\n    \n\n## References\n\nThis documentation is based on the NABERS Energy Rating Calculator API specifications.\n\n[https://nabers.atlassian.net/wiki/spaces/nabersapi/pages/169443329/NABERS+APIs](https://nabers.atlassian.net/wiki/spaces/nabersapi/pages/169443329/NABERS+APIs)",
+        "operationId": "officeBaseBuildingEnergy",
+        "parameters": [
+          {
+            "name": "ocp-apim-subscription-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "{{vault:API_KEY}}"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ratingcalculator_calculate_body"
+              },
+              "examples": {
+                "Apartment Building Energy": {
+                  "value": {
+                    "Control": {
+                      "BuildingAddress": "12 Darcy street, Parramatta NSW - 2150",
+                      "CompanyName": "DPE",
+                      "EmailAddress": "naberstest@environment.nsw.gov.au",
+                      "Postcode": "2150",
+                      "PremiseType": "apartmentbuilding",
+                      "RatingScope": "",
+                      "RatingType": "Energy",
+                      "SiteName": "4 Parramatta Square"
+                    },
+                    "RatingInputs": {
+                      "EnergyInputs": {
+                        "Electricity": 659959.6,
+                        "Gas": 5000,
+                        "GreenPower": 30
+                      },
+                      "ParkingSpacesMechanical": 298,
+                      "ParkingSpacesNatural": 0,
+                      "apartmentsForRating": 150,
+                      "apartmentsWithCAC": 150,
+                      "apartmentsWithCWS": 0,
+                      "apartmentsWithLift": 150,
+                      "hasSwimmingPool": true,
+                      "monthsGymAvailable": 12,
+                      "monthsPoolAvailable": 12,
+                      "netOREGConsumption": 54212.97,
+                      "offsiteLGCsSurrendered": 333.123,
+                      "schemeHasGym": "true",
+                      "schemeHasHeatedPool": true,
+                      "totalApartments": 150,
+                      "totalElectricityExclusions": 719565.14,
+                      "totalElectricityInclusions": 1274457.25,
+                      "totalGasAndLPGExclusions": 450.55,
+                      "totalGasAndLPGInclusions": 2996857.54,
+                      "totalGreenPowerConsumption": 55027.92,
+                      "totalGreenPowerPurchasedSeperately": 3000,
+                      "totalOREGConsumption": 54212.97,
+                      "totalOffsitePurchases": 10000,
+                      "totalOnsiteLGCsExported": 10
+                    }
+                  }
+                },
+                "Apartment Building Energy backup": {
+                  "value": {
+                    "Control": {
+                      "BuildingAddress": "12 Darcy street, Parramatta NSW - 2150",
+                      "CompanyName": "DPE",
+                      "EmailAddress": "naberstest@environment.nsw.gov.au",
+                      "Postcode": "2150",
+                      "PremiseType": "apartmentbuilding",
+                      "RatingScope": "",
+                      "RatingType": "Energy",
+                      "SiteName": "4 Parramatta Square"
+                    },
+                    "RatingInputs": {
+                      "EnergyInputs": {
+                        "Electricity": 659959.6,
+                        "Gas": 5000,
+                        "GreenPower": 30
+                      },
+                      "ParkingSpacesMechanical": 298,
+                      "ParkingSpacesNatural": 0,
+                      "apartmentsForRating": 150,
+                      "apartmentsWithCAC": 150,
+                      "apartmentsWithCWS": 0,
+                      "apartmentsWithLift": 150,
+                      "hasSwimmingPool": true,
+                      "monthsGymAvailable": 12,
+                      "monthsPoolAvailable": 12,
+                      "netOREGConsumption": 54212.97,
+                      "offsiteLGCsSurrendered": 333.123,
+                      "schemeHasGym": "true",
+                      "schemeHasHeatedPool": true,
+                      "totalApartments": 150,
+                      "totalElectricityExclusions": 719565.14,
+                      "totalElectricityInclusions": 1274457.25,
+                      "totalGasAndLPGExclusions": 450.55,
+                      "totalGasAndLPGInclusions": 2996857.54,
+                      "totalGreenPowerConsumption": 55027.92,
+                      "totalGreenPowerPurchasedSeperately": 3000,
+                      "totalOREGConsumption": 54212.97,
+                      "totalOffsitePurchases": 10000,
+                      "totalOnsiteLGCsExported": 10
+                    }
+                  }
+                },
+                "Apartment Building Water": {
+                  "value": {
+                    "Control": {
+                      "BuildingAddress": "12 Darcy street, Parramatta NSW - 2150",
+                      "CompanyName": "DPE",
+                      "EmailAddress": "naberstest@environment.nsw.gov.au",
+                      "Postcode": "2150",
+                      "PremiseType": "apartmentbuilding",
+                      "RatingScope": "",
+                      "RatingType": "Water",
+                      "SiteName": "4 Parramatta Square"
+                    },
+                    "RatingInputs": {
+                      "WaterInputs": {
+                        "RecycledWater": 650.4,
+                        "Water": 22683
+                      },
+                      "apartmentsForRating": 150,
+                      "apartmentsWithCAC": 150,
+                      "apartmentsWithCDHW": 50,
+                      "apartmentsWithCWM": 100,
+                      "apartmentsWithCWS": 0,
+                      "apartmentsWithWCDHW": 0,
+                      "totalApartments": 150
+                    }
+                  }
+                },
+                "Data Centre IT Equipment Energy": {
+                  "value": {
+                    "Control": {
+                      "BuildingAddress": "12 Darcy street, Parramatta NSW - 2150",
+                      "CompanyName": "DPE",
+                      "EmailAddress": "naberstest@environment.nsw.gov.au",
+                      "Postcode": "2150",
+                      "PremiseType": "DataCentre",
+                      "RatingScope": "ITEquipment",
+                      "RatingType": "Energy",
+                      "SiteName": "4 Parramatta Square"
+                    },
+                    "RatingInputs": {
+                      "EnergyInputs": {
+                        "Electricity": 12000,
+                        "GreenPower": 25,
+                        "HeatRejection": 100
+                      },
+                      "NoOfDays": 36,
+                      "ProcessingCapacity": 500,
+                      "StorageCapacity": 600,
+                      "netOREGConsumption": 54212.97,
+                      "offsiteLGCsSurrendered": 333.123,
+                      "totalElectricityExclusions": 719565.14,
+                      "totalElectricityInclusions": 1274457.25,
+                      "totalGasAndLPGExclusions": 450.55,
+                      "totalGasAndLPGInclusions": 2996857.54,
+                      "totalGreenPowerConsumption": 55027.92,
+                      "totalGreenPowerPurchasedSeperately": 3000,
+                      "totalOREGConsumption": 54212.97,
+                      "totalOffsitePurchases": 10000,
+                      "totalOnsiteLGCsExported": 10
+                    }
+                  }
+                },
+                "Data Centre Infrastructure Energy": {
+                  "value": {
+                    "Control": {
+                      "BuildingAddress": "12 Darcy street, Parramatta NSW - 2150",
+                      "CompanyName": "DPE",
+                      "EmailAddress": "naberstest@environment.nsw.gov.au",
+                      "Postcode": "2150",
+                      "PremiseType": "DataCentre",
+                      "RatingScope": "Infrastructure",
+                      "RatingType": "Energy",
+                      "SiteName": "4 Parramatta Square"
+                    },
+                    "RatingInputs": {
+                      "EnergyInputs": {
+                        "Diesel": 30,
+                        "Electricity": 12000,
+                        "GreenPower": 45,
+                        "HeatRejection": 100,
+                        "ITEnergy": 5000
+                      },
+                      "netOREGConsumption": 54212.97,
+                      "offsiteLGCsSurrendered": 333.123,
+                      "totalElectricityExclusions": 719565.14,
+                      "totalElectricityInclusions": 1274457.25,
+                      "totalGasAndLPGExclusions": 450.55,
+                      "totalGasAndLPGInclusions": 2996857.54,
+                      "totalGreenPowerConsumption": 55027.92,
+                      "totalGreenPowerPurchasedSeperately": 3000,
+                      "totalOREGConsumption": 54212.97,
+                      "totalOffsitePurchases": 10000,
+                      "totalOnsiteLGCsExported": 10
+                    }
+                  }
+                },
+                "Data Centre Infrastructure Energy backup": {
+                  "value": {
+                    "Control": {
+                      "BuildingAddress": "12 Darcy street, Parramatta NSW - 2150",
+                      "CompanyName": "DPE",
+                      "EmailAddress": "naberstest@environment.nsw.gov.au",
+                      "Postcode": "2150",
+                      "PremiseType": "DataCentre",
+                      "RatingScope": "Infrastructure",
+                      "RatingType": "Energy",
+                      "SiteName": "4 Parramatta Square"
+                    },
+                    "RatingInputs": {
+                      "EnergyInputs": {
+                        "Diesel": 30,
+                        "Electricity": 12000,
+                        "GreenPower": 45,
+                        "HeatRejection": 100,
+                        "ITEnergy": 5000
+                      },
+                      "netOREGConsumption": 54212.97,
+                      "offsiteLGCsSurrendered": 333.123,
+                      "totalElectricityExclusions": 719565.14,
+                      "totalElectricityInclusions": 1274457.25,
+                      "totalGasAndLPGExclusions": 450.55,
+                      "totalGasAndLPGInclusions": 2996857.54,
+                      "totalGreenPowerConsumption": 55027.92,
+                      "totalGreenPowerPurchasedSeperately": 3000,
+                      "totalOREGConsumption": 54212.97,
+                      "totalOffsitePurchases": 10000,
+                      "totalOnsiteLGCsExported": 10
+                    }
+                  }
+                },
+                "Data Centre Whole Facility Energy": {
+                  "value": {
+                    "Control": {
+                      "BuildingAddress": "12 Darcy street, Parramatta NSW - 2150",
+                      "CompanyName": "DPE",
+                      "EmailAddress": "naberstest@environment.nsw.gov.au",
+                      "Postcode": "2150",
+                      "PremiseType": "DataCentre",
+                      "RatingScope": "Whole",
+                      "RatingType": "Energy",
+                      "SiteName": "4 Parramatta Square"
+                    },
+                    "RatingInputs": {
+                      "EnergyInputs": {
+                        "Diesel": 30,
+                        "Electricity": 710762,
+                        "GreenPower": 25,
+                        "HeatRejection": 100
+                      },
+                      "ProcessingCapacity": 500,
+                      "StorageCapacity": 600,
+                      "netOREGConsumption": 54212.97,
+                      "offsiteLGCsSurrendered": 333.123,
+                      "totalElectricityExclusions": 719565.14,
+                      "totalElectricityInclusions": 1274457.25,
+                      "totalGasAndLPGExclusions": 450.55,
+                      "totalGasAndLPGInclusions": 2996857.54,
+                      "totalGreenPowerConsumption": 55027.92,
+                      "totalGreenPowerPurchasedSeperately": 3000,
+                      "totalOREGConsumption": 54212.97,
+                      "totalOffsitePurchases": 10000,
+                      "totalOnsiteLGCsExported": 10
+                    }
+                  }
+                },
+                "Energy Performance Indicator": {
+                  "value": {
+                    "control": {
+                      "BuildingAddress": "12 Darcy street, Parramatta NSW - 2150",
+                      "CompanyName": "DPE",
+                      "EmailAddress": "naberstest@environment.nsw.gov.au",
+                      "SiteName": "4 Parramatta Square",
+                      "postcode": "2150",
+                      "premiseType": "PI_Childcare_centre"
+                    },
+                    "ratingInputs": {
+                      "energyInputs": {
+                        "diesel": "0.00",
+                        "electricity": "122.00",
+                        "gas": "0.00"
+                      },
+                      "netOREGConsumption": 54212.97,
+                      "offsiteLGCsSurrendered": 333.123,
+                      "totalArea": "112.00",
+                      "totalElectricityExclusions": 719565.14,
+                      "totalElectricityInclusions": 1274457.25,
+                      "totalGasAndLPGExclusions": 450.55,
+                      "totalGasAndLPGInclusions": 2996857.54,
+                      "totalGreenPowerConsumption": 55027.92,
+                      "totalGreenPowerPurchasedSeperately": 3000,
+                      "totalOREGConsumption": 54212.97,
+                      "totalOffsitePurchases": 10000,
+                      "totalOnsiteLGCsExported": 10
+                    }
+                  }
+                },
+                "Hotel Energy": {
+                  "value": {
+                    "Control": {
+                      "BuildingAddress": "12 Darcy street, Parramatta NSW - 2150",
+                      "CompanyName": "DPE",
+                      "EmailAddress": "naberstest@environment.nsw.gov.au",
+                      "Postcode": "2150",
+                      "PremiseType": "Hotel",
+                      "RatingScope": "",
+                      "RatingType": "Energy",
+                      "SiteName": "4 Parramatta Square"
+                    },
+                    "RatingInputs": {
+                      "AAAStarRating": "3",
+                      "EnergyInputs": {
+                        "Diesel": 30,
+                        "Electricity": 659959.6,
+                        "Gas": 5000,
+                        "GreenPower": 25
+                      },
+                      "FunctionRoomSeats": 1200,
+                      "GuestRoomsLaunderService": 50,
+                      "HeatedPoolsSurfaceArea": 60,
+                      "TotalGuestRooms": 60,
+                      "WaterInputs": {
+                        "RecycledWater": 0
+                      },
+                      "netOREGConsumption": 54212.97,
+                      "offsiteLGCsSurrendered": 333.123,
+                      "totalElectricityExclusions": 719565.14,
+                      "totalElectricityInclusions": 1274457.25,
+                      "totalGasAndLPGExclusions": 450.55,
+                      "totalGasAndLPGInclusions": 2996857.54,
+                      "totalGreenPowerConsumption": 55027.92,
+                      "totalGreenPowerPurchasedSeperately": 3000,
+                      "totalOREGConsumption": 54212.97,
+                      "totalOffsitePurchases": 10000,
+                      "totalOnsiteLGCsExported": 10
+                    }
+                  }
+                },
+                "Hotel Water": {
+                  "value": {
+                    "Control": {
+                      "BuildingAddress": "12 Darcy street, Parramatta NSW - 2150",
+                      "CompanyName": "DPE",
+                      "EmailAddress": "naberstest@environment.nsw.gov.au",
+                      "Postcode": "2150",
+                      "PremiseType": "Hotel",
+                      "RatingScope": "",
+                      "RatingType": "Water",
+                      "SiteName": "4 Parramatta Square"
+                    },
+                    "RatingInputs": {
+                      "AAAStarRating": "3",
+                      "FunctionRoomSeats": 1200,
+                      "GuestRoomsLaunderService": 50,
+                      "TotalGuestRooms": 60,
+                      "WaterInputs": {
+                        "RecycledWater": 64.8,
+                        "Water": 5168
+                      }
+                    }
+                  }
+                },
+                "Office Base Building Energy": {
+                  "value": {
+                    "Control": {
+                      "BuildingAddress": "12 Darcy street, Parramatta NSW - 2150",
+                      "CompanyName": "DPE",
+                      "EmailAddress": "naberstest@environment.nsw.gov.au",
+                      "Postcode": "2150",
+                      "PremiseType": "Office",
+                      "RatingScope": "Base",
+                      "RatingType": "Energy",
+                      "SiteName": "4 Parramatta Square"
+                    },
+                    "RatingInputs": {
+                      "EnergyInputs": {
+                        "Diesel": 30,
+                        "Electricity": 31922.8,
+                        "Gas": 5000,
+                        "GreenPower": 30
+                      },
+                      "TotalArea": 400,
+                      "TotalComputerCount": 267,
+                      "TotalHours": 50,
+                      "netOREGConsumption": 54212.97,
+                      "offsiteLGCsSurrendered": 333.123,
+                      "totalElectricityExclusions": 719565.14,
+                      "totalElectricityInclusions": 1274457.25,
+                      "totalGasAndLPGExclusions": 450.55,
+                      "totalGasAndLPGInclusions": 2996857.54,
+                      "totalGreenPowerConsumption": 55027.92,
+                      "totalGreenPowerPurchasedSeperately": 3000,
+                      "totalOREGConsumption": 54212.97,
+                      "totalOffsitePurchases": 10000,
+                      "totalOnsiteLGCsExported": 10
+                    }
+                  }
+                },
+                "Office Base Building Indoor Environment": {
+                  "value": {
+                    "Control": {
+                      "BuildingAddress": "12 Darcy street, Parramatta NSW - 2150",
+                      "CompanyName": "DPE",
+                      "EmailAddress": "naberstest@environment.nsw.gov.au",
+                      "Postcode": "2150",
+                      "PremiseType": "Office",
+                      "RatingScope": "Base",
+                      "RatingType": "IE",
+                      "SiteName": "4 Parramatta Square"
+                    },
+                    "RatingInputs": {
+                      "IEInputs": {
+                        "AcousticMeasurementBaseBenchmark": 40.2,
+                        "AcousticMeasurementTenancyWholeBenchmark": 35,
+                        "IndoorAirQualityCarbonMonoxide": 0.4,
+                        "IndoorAirQualityFormaldehyde": 0.04,
+                        "IndoorAirQualityParticulateMatter": 5.5,
+                        "IndoorAirQualityTotalVOCs": 0.8,
+                        "IndoorAirQualityVentilationEffectivness": 93,
+                        "LightingHorizontalIlluminance": 65,
+                        "OccupantSurveyAcoustics": 50,
+                        "OccupantSurveyIndoorAirQuality": 50,
+                        "OccupantSurveyLighting": 50,
+                        "OccupantSurveyOfficeLayout": 50,
+                        "OccupantSurveyThermalComfort": 50,
+                        "ThermalComfortAnnualMonitoring": 94,
+                        "ThermalComfortSpotMeasurements": 94
+                      }
+                    }
+                  }
+                },
+                "Office Base Building Water": {
+                  "value": {
+                    "Control": {
+                      "BuildingAddress": "12 Darcy street, Parramatta NSW - 2150",
+                      "CompanyName": "DPE",
+                      "EmailAddress": "naberstest@environment.nsw.gov.au",
+                      "Postcode": "2150",
+                      "PremiseType": "Office",
+                      "RatingScope": "Base",
+                      "RatingType": "Water",
+                      "SiteName": "4 Parramatta Square"
+                    },
+                    "RatingInputs": {
+                      "TotalArea": 4000,
+                      "TotalHours": 50,
+                      "WaterInputs": {
+                        "RecycledWater": 6504.9,
+                        "Water": 2168
+                      }
+                    }
+                  }
+                },
+                "Office Tenancy Energy": {
+                  "value": {
+                    "Control": {
+                      "BuildingAddress": "12 Darcy street, Parramatta NSW - 2150",
+                      "CompanyName": "DPE",
+                      "EmailAddress": "naberstest@environment.nsw.gov.au",
+                      "Postcode": "2150",
+                      "PremiseType": "Office",
+                      "RatingScope": "Tenancy",
+                      "RatingType": "Energy",
+                      "SiteName": "4 Parramatta Square"
+                    },
+                    "RatingInputs": {
+                      "EnergyInputs": {
+                        "Diesel": 30,
+                        "Electricity": 52000,
+                        "Gas": 5000,
+                        "GreenPower": 20
+                      },
+                      "TotalArea": 400,
+                      "TotalComputerCount": 27,
+                      "TotalHours": 50,
+                      "netOREGConsumption": 54212.97,
+                      "offsiteLGCsSurrendered": 333.123,
+                      "totalElectricityExclusions": 719565.14,
+                      "totalElectricityInclusions": 1274457.25,
+                      "totalGasAndLPGExclusions": 450.55,
+                      "totalGasAndLPGInclusions": 2996857.54,
+                      "totalGreenPowerConsumption": 55027.92,
+                      "totalGreenPowerPurchasedSeperately": 3000,
+                      "totalOREGConsumption": 54212.97,
+                      "totalOffsitePurchases": 10000,
+                      "totalOnsiteLGCsExported": 10
+                    }
+                  }
+                },
+                "Office Whole Building Energy": {
+                  "value": {
+                    "Control": {
+                      "BuildingAddress": "12 Darcy street, Parramatta NSW - 2150",
+                      "CompanyName": "DPE",
+                      "EmailAddress": "naberstest@environment.nsw.gov.au",
+                      "Postcode": "2150",
+                      "PremiseType": "Office",
+                      "RatingScope": "Whole",
+                      "RatingType": "Energy",
+                      "SiteName": "4 Parramatta Square"
+                    },
+                    "RatingInputs": {
+                      "EnergyInputs": {
+                        "Diesel": 30,
+                        "Electricity": 308896,
+                        "Gas": 5000,
+                        "GreenPower": 30
+                      },
+                      "TotalArea": 400,
+                      "TotalComputerCount": 270,
+                      "TotalHours": 50,
+                      "netOREGConsumption": 54212.97,
+                      "offsiteLGCsSurrendered": 333.123,
+                      "totalElectricityExclusions": 719565.14,
+                      "totalElectricityInclusions": 1274457.25,
+                      "totalGasAndLPGExclusions": 450.55,
+                      "totalGasAndLPGInclusions": 2996857.54,
+                      "totalGreenPowerConsumption": 55027.92,
+                      "totalGreenPowerPurchasedSeperately": 3000,
+                      "totalOREGConsumption": 54212.97,
+                      "totalOffsitePurchases": 10000,
+                      "totalOnsiteLGCsExported": 10
+                    }
+                  }
+                },
+                "Office Whole Building Water": {
+                  "value": {
+                    "Control": {
+                      "BuildingAddress": "12 Darcy street, Parramatta NSW - 2150",
+                      "CompanyName": "DPE",
+                      "EmailAddress": "naberstest@environment.nsw.gov.au",
+                      "Postcode": "2150",
+                      "PremiseType": "Office",
+                      "RatingScope": "Whole",
+                      "RatingType": "Water",
+                      "SiteName": "4 Parramatta Square"
+                    },
+                    "RatingInputs": {
+                      "TotalArea": 400,
+                      "TotalHours": 50,
+                      "WaterInputs": {
+                        "RecycledWater": 43.2,
+                        "Water": 216
+                      }
+                    }
+                  }
+                },
+                "RACRL Aged care Energy": {
+                  "value": {
+                    "Control": {
+                      "BuildingAddress": "12 Darcy street, Parramatta NSW - 2150",
+                      "CompanyName": "DPE",
+                      "EmailAddress": "naberstest@environment.nsw.gov.au",
+                      "Postcode": "2150",
+                      "PremiseType": "racrl",
+                      "RatingScope": "residential aged care",
+                      "RatingType": "Energy",
+                      "SiteName": "4 Parramatta Square"
+                    },
+                    "RatingInputs": {
+                      "EnergyInputs": {
+                        "Electricity": 120,
+                        "Gas": 5000,
+                        "GreenPower": 30
+                      },
+                      "heavyLaundry": true,
+                      "netOREGConsumption": 54212.97,
+                      "occupiedBedDays": 150,
+                      "offsiteLGCsSurrendered": 333.123,
+                      "totalElectricityExclusions": 719565.14,
+                      "totalElectricityInclusions": 1274457.25,
+                      "totalGasAndLPGExclusions": 450.55,
+                      "totalGasAndLPGInclusions": 2996857.54,
+                      "totalGreenPowerConsumption": 55027.92,
+                      "totalGreenPowerPurchasedSeperately": 3000,
+                      "totalOREGConsumption": 54212.97,
+                      "totalOffsitePurchases": 10000,
+                      "totalOnsiteLGCsExported": 10
+                    }
+                  }
+                },
+                "RACRL Aged care Water": {
+                  "value": {
+                    "Control": {
+                      "BuildingAddress": "12 Darcy street, Parramatta NSW - 2150",
+                      "CompanyName": "DPE",
+                      "EmailAddress": "naberstest@environment.nsw.gov.au",
+                      "Postcode": "2150",
+                      "PremiseType": "RACRL",
+                      "RatingScope": "residential aged care",
+                      "RatingType": "Water",
+                      "SiteName": "4 Parramatta Square"
+                    },
+                    "RatingInputs": {
+                      "WaterInputs": {
+                        "RecycledWater": 61.8,
+                        "Water": 216
+                      },
+                      "heavyLaundry": true,
+                      "occupiedBedDays": 300
+                    }
+                  }
+                },
+                "RACRL Co-located Energy": {
+                  "value": {
+                    "Control": {
+                      "BuildingAddress": "12 Darcy street, Parramatta NSW - 2150",
+                      "CompanyName": "DPE",
+                      "EmailAddress": "naberstest@environment.nsw.gov.au",
+                      "Postcode": "2150",
+                      "PremiseType": "racrl",
+                      "RatingScope": "co-located",
+                      "RatingType": "Energy",
+                      "SiteName": "4 Parramatta Square"
+                    },
+                    "RatingInputs": {
+                      "EnergyInputs": {
+                        "Electricity": 3088967,
+                        "Gas": 5000,
+                        "GreenPower": 10
+                      },
+                      "heatedPoolArea": 100,
+                      "heavyLaundry": true,
+                      "netOREGConsumption": 54212.97,
+                      "numberOfServicedApartments": 500,
+                      "occupiedBedDays": 300,
+                      "offsiteLGCsSurrendered": 333.123,
+                      "siteArea": 5000,
+                      "totalElectricityExclusions": 719565.14,
+                      "totalElectricityInclusions": 1274457.25,
+                      "totalGasAndLPGExclusions": 450.55,
+                      "totalGasAndLPGInclusions": 2996857.54,
+                      "totalGreenPowerConsumption": 55027.92,
+                      "totalGreenPowerPurchasedSeperately": 3000,
+                      "totalNumberOfDwellings": 500,
+                      "totalOREGConsumption": 54212.97,
+                      "totalOffsitePurchases": 10000,
+                      "totalOnsiteLGCsExported": 10,
+                      "unheatedPoolArea": 70,
+                      "weeklyMeals": 150
+                    }
+                  }
+                },
+                "RACRL Retirement Living Energy": {
+                  "value": {
+                    "Control": {
+                      "BuildingAddress": "12 Darcy street, Parramatta NSW - 2150",
+                      "CompanyName": "DPE",
+                      "EmailAddress": "naberstest@environment.nsw.gov.au",
+                      "Postcode": "2150",
+                      "PremiseType": "racrl",
+                      "RatingScope": "retirement living",
+                      "RatingType": "Energy",
+                      "SiteName": "4 Parramatta Square"
+                    },
+                    "RatingInputs": {
+                      "EnergyInputs": {
+                        "Electricity": 3088967,
+                        "Gas": 5000,
+                        "GreenPower": 20
+                      },
+                      "heatedPoolArea": 100,
+                      "netOREGConsumption": 54212.97,
+                      "numberOfServicedApartments": 500,
+                      "offsiteLGCsSurrendered": 333.123,
+                      "siteArea": 5000,
+                      "totalElectricityExclusions": 719565.14,
+                      "totalElectricityInclusions": 1274457.25,
+                      "totalGasAndLPGExclusions": 450.55,
+                      "totalGasAndLPGInclusions": 2996857.54,
+                      "totalGreenPowerConsumption": 55027.92,
+                      "totalGreenPowerPurchasedSeperately": 3000,
+                      "totalNumberOfDwellings": 500,
+                      "totalOREGConsumption": 54212.97,
+                      "totalOffsitePurchases": 10000,
+                      "totalOnsiteLGCsExported": 10,
+                      "unheatedPoolArea": 70,
+                      "weeklyMeals": 150
+                    }
+                  }
+                },
+                "RACRL Retirement Living Water": {
+                  "value": {
+                    "Control": {
+                      "BuildingAddress": "12 Darcy street, Parramatta NSW - 2150",
+                      "CompanyName": "DPE",
+                      "EmailAddress": "naberstest@environment.nsw.gov.au",
+                      "Postcode": "2150",
+                      "PremiseType": "racrl",
+                      "RatingScope": "retirement living",
+                      "RatingType": "Energy",
+                      "SiteName": "4 Parramatta Square"
+                    },
+                    "RatingInputs": {
+                      "WaterInputs": {
+                        "RecycledWater": 650.4,
+                        "Water": 21683
+                      },
+                      "heatedPoolArea": 100,
+                      "siteArea": 5000,
+                      "totalNumberOfDwellings": 500,
+                      "weeklyMeals": 150
+                    }
+                  }
+                },
+                "Retail Store Energy": {
+                  "value": {
+                    "control": {
+                      "BuildingAddress": "12 Darcy street, Parramatta NSW - 2150",
+                      "CompanyName": "DPE",
+                      "EmailAddress": "naberstest@environment.nsw.gov.au",
+                      "SiteName": "4 Parramatta Square",
+                      "postcode": 2150,
+                      "premiseType": "Retail store",
+                      "ratingperiodFrom": "2023-01-01"
+                    },
+                    "ratinginputs": {
+                      "energyInputs": {
+                        "diesel": 0,
+                        "electricity": 72454.91,
+                        "gas": 99349.37,
+                        "lpg": 30
+                      },
+                      "isStandAlone": false,
+                      "netOREGConsumption": 54212.97,
+                      "offsiteLGCsSurrendered": 333.123,
+                      "retailCategory": "R1",
+                      "serviceArrangement": "Centrally Serviced",
+                      "totalArea": 600,
+                      "totalElectricityExclusions": 719565.14,
+                      "totalElectricityInclusions": 1274457.25,
+                      "totalGasAndLPGExclusions": 450.55,
+                      "totalGasAndLPGInclusions": 2996857.54,
+                      "totalGreenPowerConsumption": 55027.92,
+                      "totalGreenPowerPurchasedSeperately": 3000,
+                      "totalHours": 50,
+                      "totalOREGConsumption": 54212.97,
+                      "totalOffsitePurchases": 10000,
+                      "totalOnsiteLGCsExported": 10
+                    }
+                  }
+                },
+                "School Catholic Energy": {
+                  "value": {
+                    "Control": {
+                      "BuildingAddress": "12 Darcy street, Parramatta NSW - 2150",
+                      "CompanyName": "DPE",
+                      "EmailAddress": "naberstest@environment.nsw.gov.au",
+                      "Postcode": "2150",
+                      "PremiseType": "School",
+                      "RatingScope": "",
+                      "RatingType": "Energy",
+                      "SiteName": "4 Parramatta Square",
+                      "subsector": "catholic systemic school"
+                    },
+                    "RatingInputs": {
+                      "EnergyInputs": {
+                        "Electricity": 710762,
+                        "Gas": 5000,
+                        "GreenPower": 50
+                      },
+                      "grossFloorArea": 5000,
+                      "hasSwimmingPool": "true",
+                      "netOREGConsumption": 54212.97,
+                      "numberOfELCStudents": 30,
+                      "numberOfPrimaryStudents": 600,
+                      "numberOfSecondaryStudents": 300,
+                      "numberOfSpecialNeedsStudents": 10,
+                      "offsiteLGCsSurrendered": 333.123,
+                      "remoteArea": "Major Cities",
+                      "schemeHasHeatedPool": "true",
+                      "subsector": "catholic systemic school",
+                      "totalElectricityExclusions": 719565.14,
+                      "totalElectricityInclusions": 1274457.25,
+                      "totalGasAndLPGExclusions": 450.55,
+                      "totalGasAndLPGInclusions": 2996857.54,
+                      "totalGreenPowerConsumption": 55027.92,
+                      "totalGreenPowerPurchasedSeperately": 3000,
+                      "totalOREGConsumption": 54212.97,
+                      "totalOffsitePurchases": 10000,
+                      "totalOnsiteLGCsExported": 10
+                    }
+                  }
+                },
+                "School Catholic Water": {
+                  "value": {
+                    "Control": {
+                      "BuildingAddress": "12 Darcy street, Parramatta NSW - 2150",
+                      "CompanyName": "DPE",
+                      "EmailAddress": "naberstest@environment.nsw.gov.au",
+                      "Postcode": "2150",
+                      "PremiseType": "School",
+                      "RatingScope": "",
+                      "RatingType": "Water",
+                      "SiteName": "4 Parramatta Square",
+                      "subsector": "catholic systemic school"
+                    },
+                    "RatingInputs": {
+                      "WaterInputs": {
+                        "RecycledWater": 556.8000000000001,
+                        "Water": 5568
+                      },
+                      "hasSwimmingPool": "true",
+                      "numberOfELCStudents": 30,
+                      "numberOfFTEWorkers": 70,
+                      "numberOfPrimaryStudents": 600,
+                      "numberOfSecondaryStudents": 300,
+                      "numberOfSpecialNeedsStudents": 10,
+                      "remoteArea": "Major Cities",
+                      "schemeHasHeatedPool": "true",
+                      "siteArea": 63148.4,
+                      "subsector": "catholic systemic school",
+                      "swimmingPoolArea": 100
+                    }
+                  }
+                },
+                "School Government Energy": {
+                  "value": {
+                    "Control": {
+                      "BuildingAddress": "12 Darcy street, Parramatta NSW - 2150",
+                      "CompanyName": "DPE",
+                      "EmailAddress": "naberstest@environment.nsw.gov.au",
+                      "Postcode": "2150",
+                      "PremiseType": "School",
+                      "RatingScope": "",
+                      "RatingType": "Energy",
+                      "SiteName": "4 Parramatta Square",
+                      "subsector": "government"
+                    },
+                    "RatingInputs": {
+                      "EnergyInputs": {
+                        "Electricity": 710762,
+                        "Gas": 5000,
+                        "GreenPower": 50
+                      },
+                      "grossFloorArea": 5000,
+                      "hasSwimmingPool": "true",
+                      "netOREGConsumption": 54212.97,
+                      "numberOfELCStudents": 30,
+                      "numberOfPrimaryStudents": 600,
+                      "numberOfSecondaryStudents": 300,
+                      "numberOfSpecialNeedsStudents": 10,
+                      "offsiteLGCsSurrendered": 333.123,
+                      "remoteArea": "Major Cities",
+                      "schemeHasHeatedPool": "true",
+                      "subsector": "government",
+                      "totalElectricityExclusions": 719565.14,
+                      "totalElectricityInclusions": 1274457.25,
+                      "totalGasAndLPGExclusions": 450.55,
+                      "totalGasAndLPGInclusions": 2996857.54,
+                      "totalGreenPowerConsumption": 55027.92,
+                      "totalGreenPowerPurchasedSeperately": 3000,
+                      "totalOREGConsumption": 54212.97,
+                      "totalOffsitePurchases": 10000,
+                      "totalOnsiteLGCsExported": 10
+                    }
+                  }
+                },
+                "School Government Water": {
+                  "value": {
+                    "Control": {
+                      "BuildingAddress": "12 Darcy street, Parramatta NSW - 2150",
+                      "CompanyName": "DPE",
+                      "EmailAddress": "naberstest@environment.nsw.gov.au",
+                      "Postcode": "2150",
+                      "PremiseType": "School",
+                      "RatingScope": "",
+                      "RatingType": "Water",
+                      "SiteName": "4 Parramatta Square",
+                      "subsector": "government"
+                    },
+                    "RatingInputs": {
+                      "WaterInputs": {
+                        "RecycledWater": 64.8,
+                        "Water": 2268
+                      },
+                      "hasSwimmingPool": "true",
+                      "numberOfELCStudents": 30,
+                      "numberOfFTEWorkers": 70,
+                      "numberOfPrimaryStudents": 600,
+                      "numberOfSecondaryStudents": 300,
+                      "numberOfSpecialNeedsStudents": 10,
+                      "remoteArea": "Major Cities",
+                      "schemeHasHeatedPool": "true",
+                      "siteArea": 63148.4,
+                      "subsector": "government",
+                      "swimmingPoolArea": 100
+                    }
+                  }
+                },
+                "School Independent Energy": {
+                  "value": {
+                    "Control": {
+                      "BuildingAddress": "12 Darcy street, Parramatta NSW - 2150",
+                      "CompanyName": "DPE",
+                      "EmailAddress": "naberstest@environment.nsw.gov.au",
+                      "Postcode": "2150",
+                      "PremiseType": "School",
+                      "RatingScope": "",
+                      "RatingType": "Energy",
+                      "SiteName": "4 Parramatta Square",
+                      "subsector": "independent school"
+                    },
+                    "RatingInputs": {
+                      "EnergyInputs": {
+                        "Electricity": 710762,
+                        "Gas": 5000,
+                        "GreenPower": 50
+                      },
+                      "grossFloorArea": 5000,
+                      "hasSwimmingPool": "true",
+                      "netOREGConsumption": 54212.97,
+                      "numberOfELCStudents": 30,
+                      "numberOfPrimaryStudents": 600,
+                      "numberOfSecondaryStudents": 300,
+                      "numberOfSpecialNeedsStudents": 10,
+                      "offsiteLGCsSurrendered": 333.123,
+                      "remoteArea": "Major Cities",
+                      "schemeHasHeatedPool": "true",
+                      "subsector": "independent school",
+                      "totalElectricityExclusions": 719565.14,
+                      "totalElectricityInclusions": 1274457.25,
+                      "totalGasAndLPGExclusions": 450.55,
+                      "totalGasAndLPGInclusions": 2996857.54,
+                      "totalGreenPowerConsumption": 55027.92,
+                      "totalGreenPowerPurchasedSeperately": 3000,
+                      "totalOREGConsumption": 54212.97,
+                      "totalOffsitePurchases": 10000,
+                      "totalOnsiteLGCsExported": 10
+                    }
+                  }
+                },
+                "School Independent Water": {
+                  "value": {
+                    "Control": {
+                      "BuildingAddress": "12 Darcy street, Parramatta NSW - 2150",
+                      "CompanyName": "DPE",
+                      "EmailAddress": "naberstest@environment.nsw.gov.au",
+                      "Postcode": "2150",
+                      "PremiseType": "School",
+                      "RatingScope": "",
+                      "RatingType": "Water",
+                      "SiteName": "4 Parramatta Square",
+                      "subsector": "independent school"
+                    },
+                    "RatingInputs": {
+                      "WaterInputs": {
+                        "RecycledWater": 1113.6,
+                        "Water": 5568
+                      },
+                      "hasSwimmingPool": "true",
+                      "numberOfELCStudents": 30,
+                      "numberOfFTEWorkers": 70,
+                      "numberOfPrimaryStudents": 600,
+                      "numberOfSecondaryStudents": 300,
+                      "numberOfSpecialNeedsStudents": 10,
+                      "remoteArea": "Major Cities",
+                      "schemeHasHeatedPool": "true",
+                      "siteArea": 63148.4,
+                      "subsector": "independent school",
+                      "swimmingPoolArea": 100
+                    }
+                  }
+                },
+                "Shopping Centre Energy": {
+                  "value": {
+                    "Control": {
+                      "BuildingAddress": "12 Darcy street, Parramatta NSW - 2150",
+                      "CompanyName": "DPE",
+                      "EmailAddress": "naberstest@environment.nsw.gov.au",
+                      "Postcode": "2150",
+                      "PremiseType": "ShoppingCentre",
+                      "RatingScope": "",
+                      "RatingType": "Energy",
+                      "SiteName": "4 Parramatta Square"
+                    },
+                    "RatingInputs": {
+                      "CentralServicedArea": 17222.1,
+                      "CentrallyServicedGymArea": 5600,
+                      "EnergyInputs": {
+                        "Diesel": 30,
+                        "Electricity": 5088967,
+                        "Gas": 5000,
+                        "GreenPower": 30
+                      },
+                      "FloorConfiguration": "multi storey",
+                      "FoodCourtSeats": 500,
+                      "HoursofService": 61,
+                      "IsSmallShoppingCentre": true,
+                      "ParkingSpacesMechanical": 298,
+                      "ParkingSpacesNatural": 0,
+                      "TotalShoppingGLAR": 18771.2,
+                      "TradingDays": 300,
+                      "netOREGConsumption": 54212.97,
+                      "offsiteLGCsSurrendered": 333.123,
+                      "totalElectricityExclusions": 719565.14,
+                      "totalElectricityInclusions": 1274457.25,
+                      "totalGasAndLPGExclusions": 450.55,
+                      "totalGasAndLPGInclusions": 2996857.54,
+                      "totalGreenPowerConsumption": 55027.92,
+                      "totalGreenPowerPurchasedSeperately": 3000,
+                      "totalOREGConsumption": 54212.97,
+                      "totalOffsitePurchases": 10000,
+                      "totalOnsiteLGCsExported": 10
+                    }
+                  }
+                },
+                "Shopping Centre Water": {
+                  "value": {
+                    "Control": {
+                      "BuildingAddress": "12 Darcy street, Parramatta NSW - 2150",
+                      "CompanyName": "DPE",
+                      "EmailAddress": "naberstest@environment.nsw.gov.au",
+                      "Postcode": "2150",
+                      "PremiseType": "ShoppingCentre",
+                      "RatingScope": "",
+                      "RatingType": "Water",
+                      "SiteName": "4 Parramatta Square"
+                    },
+                    "RatingInputs": {
+                      "CinemaTheatres": 5,
+                      "FoodCourtSeats": 500,
+                      "HoursofService": 61,
+                      "IsSmallShoppingCentre": true,
+                      "TotalGymGLAR": 500,
+                      "TotalShoppingGLAR": 18771.2,
+                      "TradingDays": 361,
+                      "WaterInputs": {
+                        "RecycledWater": 6504.9,
+                        "Water": 21683
+                      }
+                    }
+                  }
+                },
+                "Warehouse and Cold Stores Energy": {
+                  "value": {
+                    "Control": {
+                      "BuildingAddress": "12 Darcy street, Parramatta NSW - 2150",
+                      "CompanyName": "DPE",
+                      "EmailAddress": "naberstest@environment.nsw.gov.au",
+                      "Postcode": "2150",
+                      "PremiseType": "warehouse and cold store",
+                      "RatingScope": "",
+                      "RatingType": "Energy",
+                      "SiteName": "4 Parramatta Square"
+                    },
+                    "RatingInputs": {
+                      "EnergyInputs": {
+                        "Diesel": 30,
+                        "Electricity": 31922.8,
+                        "Gas": 5000,
+                        "GreenPower": 30
+                      },
+                      "conditionedGLA": 518,
+                      "coolRoomVolume0To15Deg": 4,
+                      "coolRoomVolumeMinus20To0Deg": -10,
+                      "netOREGConsumption": 54212.97,
+                      "nonConditionedAmbientGLA": 670,
+                      "numberOfFTEWorkers": 65.5,
+                      "offsiteLGCsSurrendered": 333.123,
+                      "ratedSiteArea": 16434.9,
+                      "totalElectricityExclusions": 719565.14,
+                      "totalElectricityInclusions": 1274457.25,
+                      "totalGasAndLPGExclusions": 450.55,
+                      "totalGasAndLPGInclusions": 2996857.54,
+                      "totalGreenPowerConsumption": 55027.92,
+                      "totalGreenPowerPurchasedSeperately": 3000,
+                      "totalOREGConsumption": 54212.97,
+                      "totalOffsitePurchases": 10000,
+                      "totalOnsiteLGCsExported": 10,
+                      "weeklyOperatingHours": 128
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/reversecalculator/calculate": {
+      "post": {
+        "tags": [
+          "Reverse calculator"
+        ],
+        "summary": "Office BB Energy",
+        "description": "# Office Base Building Energy Reverse Rating Calculator\n\n## Overview\n\nThis endpoint uses the NABERS reverse calculator to determine the energy consumption required to achieve a specific NABERS star rating for an Office Base Building. The reverse calculator works by taking a target star rating and building characteristics as inputs, then calculating the required energy consumption to achieve that rating.\n\n### Key Information\n\n- **Purpose**: Calculate the energy consumption required to achieve a specific NABERS star rating\n    \n- **Authentication**: Requires an API subscription key in the header\n    \n- **Request Format**: JSON array containing building details and target rating\n    \n- **Response**: Returns the calculated energy consumption values needed to achieve the target rating\n    \n\n---\n\n## Request Method and URL\n\n- **Method:** POST\n    \n- **URL:** `https://data.nabers.gov.au/reversecalculator/calculate`\n    \n\n## Headers\n\n| Key | Value | Description |\n| --- | --- | --- |\n| Ocp-Apim-Subscription-Key | `****` (masked) | API subscription key (required) |\n| Authorization | Bearer | Bearer token for authentication (required) |\n\n## Request Body\n\nThe request body is a JSON array of objects. Each object contains the following fields:\n\n| Field | Type | Description | Example Value |\n| --- | --- | --- | --- |\n| targetStar | string | Target NABERS star rating (enum) | \"5.7\" |\n| premiseType | string | Type of premise (enum) | \"Office\" |\n| ratingScope | string | Scope of rating | \"Base Building\" |\n| ratingType | string | Type of rating | \"Energy\" |\n| premiseInputs | object | Inputs related to the premise | See nested table below |\n| enrConsumptionInputs | object | Energy consumption inputs | See nested table below |\n\n## premiseInputs Object\n\n| Field | Type | Description | Example Value |\n| --- | --- | --- | --- |\n| postcode | string | Postcode of the premise | \"2615\" |\n| numberOfComputers | string | Number of computers (decimal) | \"0.000000\" |\n| netLettableArea | string | Net lettable area in square meters | \"10888.00\" |\n| hours | string | Operating hours per week | \"40\" |\n\n## enrConsumptionInputs Object\n\n| Field | Type | Description | Example Value |\n| --- | --- | --- | --- |\n| electricityPercentage | string | Percentage of electricity usage | \"90\" |\n| gasPercentage | string | Percentage of gas usage | \"7\" |\n| dieselPercentage | string | Percentage of diesel usage | \"3\" |\n\n---\n\n## Expected Response\n\n``` json\n[\n  {\n    \"targetStar\": \"5.7\",\n    \"premiseType\": \"Office\",\n    \"ratingScope\": \"Base Building\",\n    \"ratingType\": \"Energy\",\n    \"premiseInputs\": {\n      \"postcode\": \"2615\",\n      \"numberOfComputers\": \"0.000000\",\n      \"netLettableArea\": \"10888.00\",\n      \"hours\": \"40\"\n    },\n    \"enrConsumptionInputs\": {\n      \"electricityPercentage\": \"90\",\n      \"gasPercentage\": \"7\",\n      \"dieselPercentage\": \"3\"\n    },\n    \"energyResults\": {\n      \"energyConsumption\": \"1,151,000.00\",\n      \"energyConsumptionPerM2\": \"105.71\",\n      \"energyConsumptionPerM2Benchmark\": \"105.71\",\n      \"energyConsumptionPerM2BenchmarkNormalized\": \"105.71\",\n      \"energyConsumptionPerM2Normalized\": \"105.71\",\n      \"energyConsumptionNormalized\": \"1,151,000.00\",\n      \"starRating\": \"5.7\",\n      \"starRatingNormalized\": \"5.7\"\n    },\n    \"fuelConsumption\": {\n      \"electricity\": \"1,035,900.00\",\n      \"gas\": \"80,570.00\",\n      \"diesel\": \"34,530.00\"\n    },\n    \"emissions\": {\n      \"emissionsConsumption\": \"1,035,900.00\",\n      \"emissionsConsumptionPerM2\": \"95.14\",\n      \"emissionsConsumptionPerM2Benchmark\": \"95.14\",\n      \"emissionsConsumptionPerM2BenchmarkNormalized\": \"95.14\",\n      \"emissionsConsumptionPerM2Normalized\": \"95.14\",\n      \"emissionsConsumptionNormalized\": \"1,035,900.00\"\n    }\n  }\n]\n\n ```\n\n## energyResults Object\n\n| Field | Type | Description |\n| --- | --- | --- |\n| energyConsumption | string | Total energy consumption (MJ) |\n| energyConsumptionPerM2 | string | Energy consumption per square meter (MJ/m²) |\n| energyConsumptionPerM2Benchmark | string | Benchmark energy consumption per square meter (MJ/m²) |\n| energyConsumptionPerM2BenchmarkNormalized | string | Normalized benchmark energy consumption per square meter (MJ/m²) |\n| energyConsumptionPerM2Normalized | string | Normalized energy consumption per square meter (MJ/m²) |\n| energyConsumptionNormalized | string | Normalized total energy consumption (MJ) |\n| starRating | string | Calculated NABERS star rating |\n| starRatingNormalized | string | Normalized NABERS star rating |\n\n## fuelConsumption Object\n\n| Field | Type | Description |\n| --- | --- | --- |\n| electricity | string | Electricity consumption (MJ) |\n| gas | string | Gas consumption (MJ) |\n| diesel | string | Diesel consumption (MJ) |\n\n## emissions Object\n\n| Field | Type | Description |\n| --- | --- | --- |\n| emissionsConsumption | string | Total emissions (kg CO₂-e) |\n| emissionsConsumptionPerM2 | string | Emissions per square meter (kg CO₂-e/m²) |\n| emissionsConsumptionPerM2Benchmark | string | Benchmark emissions per square meter (kg CO₂-e/m²) |\n| emissionsConsumptionPerM2BenchmarkNormalized | string | Normalized benchmark emissions per square meter (kg CO₂-e/m²) |\n| emissionsConsumptionPerM2Normalized | string | Normalized emissions per square meter (kg CO₂-e/m²) |\n| emissionsConsumptionNormalized | string | Normalized total emissions (kg CO₂-e) |\n\n## Notes\n\n- The API requires a valid subscription key for authentication\n    \n- Different building types may require different input parameters\n    \n- Reverse calculators give you an indication of the maximum amount of energy or water your building can use to achieve your desired rating.\n    \n\n## References\n\nThis documentation is based on the NABERS Energy Rating Calculator API specifications.\n\n[https://nabers.atlassian.net/wiki/spaces/nabersapi/pages/169443329/NABERS+APIs](https://nabers.atlassian.net/wiki/spaces/nabersapi/pages/169443329/NABERS+APIs)",
+        "operationId": "officeBbEnergy",
+        "parameters": [
+          {
+            "name": "ocp-apim-subscription-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "{{vault:API_KEY}}"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "example": [
+                  {
+                    "enrConsumptionInputs": {
+                      "dieselPercentage": "10",
+                      "electricityPercentage": "70",
+                      "gasPercentage": "10",
+                      "lpgPercentage": 10
+                    },
+                    "premiseInputs": {
+                      "annualTurnoverRatio": 45,
+                      "area": "4000",
+                      "coldRoomVolume": 4500,
+                      "coldstorePresence": true,
+                      "conditionedGLA": 450,
+                      "coolRoomVolume": 450,
+                      "fullTimeEmployees": 4500,
+                      "nonconditionedGLA": 450,
+                      "operatingHours": 100,
+                      "operationalData": "FTE",
+                      "postcode": "2000",
+                      "totalGLA": 45000
+                    },
+                    "premiseType": "Warehouse and cold store",
+                    "ratingType": "Energy",
+                    "targetStar": "4.5"
+                  }
+                ],
+                "items": {
+                  "$ref": "#/components/schemas/reversecalculator_calculate_body"
+                }
+              },
+              "examples": {
+                "Apartment Building Energy": {
+                  "value": {
+                    "enrConsumptionInputs": {
+                      "dieselPercentage": 10,
+                      "electricityPercentage": 60,
+                      "gasPercentage": 30
+                    },
+                    "premiseInputs": {
+                      "cPMechVentilated": "800",
+                      "cPNaturallyVentilated": "0",
+                      "gym": true,
+                      "nCAC": 400,
+                      "nCW": 400,
+                      "nLift": 900,
+                      "numberOfApartments": 1000,
+                      "pool": "Temperature controlled pool",
+                      "postcode": "4000",
+                      "tMGA": 12,
+                      "tMPA": 12
+                    },
+                    "premiseType": "Apartment Building",
+                    "ratingType": "Energy",
+                    "targetStar": "6.5"
+                  }
+                },
+                "Apartment Building Water": {
+                  "value": {
+                    "enrConsumptionInputs": {},
+                    "premiseInputs": {
+                      "nCentralACWater": 800,
+                      "nCentralColdWater": 500,
+                      "nColdWaterCentralDHW": 400,
+                      "nColdWaterCentralNoDHW": 100,
+                      "numberOfApartments": 1000,
+                      "postcode": "2228"
+                    },
+                    "premiseType": "Apartment Building",
+                    "ratingType": "Water",
+                    "targetStar": "5.5"
+                  }
+                },
+                "Data Centre IT equipment Energy": {
+                  "value": {
+                    "enrConsumptionInputs": {
+                      "dieselPercentage": 0,
+                      "electricityPercentage": 100
+                    },
+                    "premiseInputs": {
+                      "pCapacity": 500,
+                      "postcode": "3000",
+                      "ratingPeriod": 36,
+                      "sCapacity": 100
+                    },
+                    "premiseType": "Data Centre",
+                    "ratingScope": "IT Equipment",
+                    "ratingType": "Energy",
+                    "targetStar": "4.5"
+                  }
+                },
+                "Data Centre Infrastructure Energy": {
+                  "value": {
+                    "enrConsumptionInputs": {
+                      "dieselPercentage": "9",
+                      "electricityPercentage": "91"
+                    },
+                    "premiseInputs": {
+                      "assessableITEnergy": 3762537.6,
+                      "dieselPercentage": "10",
+                      "electricityPercentage": "90",
+                      "meteredHRPercentage": "30",
+                      "postcode": "3000"
+                    },
+                    "premiseType": "Data Centre",
+                    "ratingScope": "Infrastructure",
+                    "ratingType": "Energy",
+                    "targetStar": "4.7"
+                  }
+                },
+                "Data Centre Whole Facility Energy": {
+                  "value": {
+                    "enrConsumptionInputs": {
+                      "dieselPercentage": "9",
+                      "electricityPercentage": "91"
+                    },
+                    "premiseInputs": {
+                      "dieselPercentage": "10",
+                      "electricityPercentage": "90",
+                      "meteredHRPercentage": "100",
+                      "pCapacity": "23255.6",
+                      "postcode": "3000",
+                      "ratingPeriod": "36",
+                      "sCapacity": "9264"
+                    },
+                    "premiseType": "Data Centre",
+                    "ratingScope": "Whole Facility",
+                    "ratingType": "Energy",
+                    "targetStar": "4.1"
+                  }
+                },
+                "Hotel Energy": {
+                  "value": {
+                    "enrConsumptionInputs": {
+                      "dieselPercentage": 2,
+                      "electricityPercentage": 80,
+                      "gasPercentage": 18
+                    },
+                    "premiseInputs": {
+                      "aAAStar": "4",
+                      "aHeatedPool": 1000,
+                      "nFsl": 300,
+                      "nFuncSeats": 1000,
+                      "postcode": "3000",
+                      "rooms": 375
+                    },
+                    "premiseType": "Hotel",
+                    "ratingType": "Energy",
+                    "targetStar": "5.15"
+                  }
+                },
+                "Hotel Water": {
+                  "value": {
+                    "enrConsumptionInputs": {},
+                    "premiseInputs": {
+                      "aAAStar": "4.5",
+                      "nFsl": 300,
+                      "nFuncSeats": 1000,
+                      "postcode": "7000",
+                      "rooms": 375
+                    },
+                    "premiseType": "Hotel",
+                    "ratingType": "Water",
+                    "targetStar": "5.7"
+                  }
+                },
+                "Office BB Energy": {
+                  "value": [
+                    {
+                      "enrConsumptionInputs": {
+                        "dieselPercentage": "3",
+                        "electricityPercentage": "90",
+                        "gasPercentage": "7"
+                      },
+                      "premiseInputs": {
+                        "hours": "40",
+                        "netLettableArea": "10888.00",
+                        "numberOfComputers": "0.000000",
+                        "postcode": "2615"
+                      },
+                      "premiseType": "Office",
+                      "ratingScope": "Base Building",
+                      "ratingType": "Energy",
+                      "targetStar": "5.7"
+                    }
+                  ]
+                },
+                "Office Tenancy Energy": {
+                  "value": [
+                    {
+                      "enrConsumptionInputs": {
+                        "dieselPercentage": "0",
+                        "electricityPercentage": "91.000000000000",
+                        "gasPercentage": "9.000000000000"
+                      },
+                      "premiseInputs": {
+                        "hours": "42.500000",
+                        "netLettableArea": "852.600000",
+                        "numberOfComputers": "63.000000",
+                        "postcode": "2320"
+                      },
+                      "premiseType": "Office",
+                      "ratingScope": "Tenancy",
+                      "ratingType": "Energy",
+                      "targetStar": "4.61"
+                    }
+                  ]
+                },
+                "Office WB Energy": {
+                  "value": [
+                    {
+                      "enrConsumptionInputs": {
+                        "dieselPercentage": "4",
+                        "electricityPercentage": "91.000000000000",
+                        "gasPercentage": "5.000000000000",
+                        "lpgPercentage": "0"
+                      },
+                      "premiseInputs": {
+                        "hours": "48.5",
+                        "netLettableArea": "610151",
+                        "numberOfComputers": "513",
+                        "postcode": "2000"
+                      },
+                      "premiseType": "Office",
+                      "ratingScope": "Whole Building",
+                      "ratingType": "Energy",
+                      "targetStar": "5.578"
+                    }
+                  ]
+                },
+                "Office WB Water": {
+                  "value": [
+                    {
+                      "premiseInputs": {
+                        "hours": "55.0",
+                        "netLettableArea": "759671.4",
+                        "postcode": "3000"
+                      },
+                      "premiseType": "Office",
+                      "ratingScope": "Whole Building",
+                      "ratingType": "Water",
+                      "targetStar": "5.12"
+                    }
+                  ]
+                },
+                "RACRL  Co-Located Water Facility": {
+                  "value": {
+                    "enrConsumptionInputs": {},
+                    "premiseInputs": {
+                      "area": 900,
+                      "dwellings": 11,
+                      "heatedPool": true,
+                      "heatedPoolArea": 60,
+                      "heavyLaundry": true,
+                      "mealsNonResident": 250,
+                      "mealsResident": 200,
+                      "obd": 3000,
+                      "postcode": "3000"
+                    },
+                    "premiseType": "RACRL",
+                    "ratingScope": "Co-Located Facility",
+                    "ratingType": "Water",
+                    "targetStar": "3.5"
+                  }
+                },
+                "RACRL  Residential Aged Care Water": {
+                  "value": {
+                    "enrConsumptionInputs": {},
+                    "premiseInputs": {
+                      "area": 0,
+                      "dwellings": 0,
+                      "heatedPool": true,
+                      "heatedPoolArea": 60,
+                      "heavyLaundry": true,
+                      "mealsNonResident": 200,
+                      "obd": 3000,
+                      "postcode": "3000"
+                    },
+                    "premiseType": "RACRL",
+                    "ratingScope": "Residential Aged Care",
+                    "ratingType": "Water",
+                    "targetStar": "3.5"
+                  }
+                },
+                "RACRL  Retirement Living Water": {
+                  "value": {
+                    "enrConsumptionInputs": {},
+                    "premiseInputs": {
+                      "area": 200,
+                      "dwellings": 50,
+                      "heatedPool": true,
+                      "heatedPoolArea": 60,
+                      "heavyLaundry": true,
+                      "mealsNonResident": 1600,
+                      "mealsResident": 900,
+                      "obd": 3000,
+                      "postcode": "3000"
+                    },
+                    "premiseType": "RACRL",
+                    "ratingScope": "Retirement Living",
+                    "ratingType": "Water",
+                    "targetStar": "2.5"
+                  }
+                },
+                "RACRL Co-Located Energy Facility": {
+                  "value": {
+                    "enrConsumptionInputs": {
+                      "dieselPercentage": 5,
+                      "electricityPercentage": 70,
+                      "gasPercentage": 20,
+                      "lpgPercentage": 5
+                    },
+                    "premiseInputs": {
+                      "area": 939,
+                      "dwellings": 11,
+                      "heatedPool": true,
+                      "heatedPoolArea": 75,
+                      "heavyLaundry": true,
+                      "mealsNonResident": 210,
+                      "mealsResident": 200,
+                      "obd": 1000,
+                      "postcode": "3000",
+                      "servicedApartments": 5,
+                      "unheatedPool": true,
+                      "unheatedPoolArea": 11.9
+                    },
+                    "premiseType": "RACRL",
+                    "ratingScope": "Co-Located Facility",
+                    "ratingType": "Energy",
+                    "targetStar": "4.4"
+                  }
+                },
+                "RACRL Residential Aged Care Energy": {
+                  "value": {
+                    "enrConsumptionInputs": {
+                      "dieselPercentage": 5,
+                      "electricityPercentage": 70,
+                      "gasPercentage": 20,
+                      "lpgPercentage": 5
+                    },
+                    "premiseInputs": {
+                      "area": 0,
+                      "heatedPool": true,
+                      "heatedPoolArea": 75,
+                      "heavyLaundry": true,
+                      "mealsNonResident": 210,
+                      "obd": 1000,
+                      "postcode": "3000"
+                    },
+                    "premiseType": "RACRL",
+                    "ratingScope": "Residential Aged Care",
+                    "ratingType": "Energy",
+                    "targetStar": "4.4"
+                  }
+                },
+                "RACRL Retirement Living Energy": {
+                  "value": {
+                    "enrConsumptionInputs": {
+                      "dieselPercentage": 5,
+                      "electricityPercentage": 70,
+                      "gasPercentage": 20,
+                      "lpgPercentage": 5
+                    },
+                    "premiseInputs": {
+                      "area": 939,
+                      "dwellings": 11,
+                      "heatedPool": true,
+                      "heatedPoolArea": 75,
+                      "heavyLaundry": true,
+                      "mealsNonResident": 210,
+                      "mealsResident": 200,
+                      "obd": 1000,
+                      "postcode": "3000",
+                      "servicedApartments": 10,
+                      "unheatedPool": true,
+                      "unheatedPoolArea": 20
+                    },
+                    "premiseType": "RACRL",
+                    "ratingScope": "Retirement Living",
+                    "ratingType": "Energy",
+                    "targetStar": "6.4"
+                  }
+                },
+                "Shopping Centre Energy": {
+                  "value": {
+                    "enrConsumptionInputs": {
+                      "dieselPercentage": 5,
+                      "electricityPercentage": 80,
+                      "gasPercentage": 15
+                    },
+                    "premiseInputs": {
+                      "cPMechVentilated": 10,
+                      "cPNaturallyVentilated": 10,
+                      "fcs": 100,
+                      "floors": "Single Storey",
+                      "gLAR": 3000,
+                      "gLARServiced": 2000,
+                      "gLARServicedGym": 200,
+                      "hoursOfService": 50,
+                      "postcode": "2000",
+                      "theatrettes": 8,
+                      "tradingDays": 365
+                    },
+                    "premiseType": "Shopping Centre",
+                    "ratingType": "Energy",
+                    "targetStar": "5.5"
+                  }
+                },
+                "Shopping Centre Water": {
+                  "value": {
+                    "premiseInputs": {
+                      "cPMechVentilated": 0,
+                      "cPNaturallyVentilated": 0,
+                      "fcs": 100,
+                      "gLAR": 3000,
+                      "gLARServiced": 750,
+                      "gLARgym": 70,
+                      "hoursOfService": 50,
+                      "postcode": "3000",
+                      "theatrettes": 2,
+                      "tradingDays": 365
+                    },
+                    "premiseType": "Shopping Centre",
+                    "ratingType": "Water",
+                    "targetStar": "5.71"
+                  }
+                },
+                "Warehouse and Cold Stores Energy": {
+                  "value": [
+                    {
+                      "enrConsumptionInputs": {
+                        "dieselPercentage": "10",
+                        "electricityPercentage": "70",
+                        "gasPercentage": "10",
+                        "lpgPercentage": 10
+                      },
+                      "premiseInputs": {
+                        "annualTurnoverRatio": 45,
+                        "area": "4000",
+                        "coldRoomVolume": 4500,
+                        "coldstorePresence": true,
+                        "conditionedGLA": 450,
+                        "coolRoomVolume": 450,
+                        "fullTimeEmployees": 4500,
+                        "nonconditionedGLA": 450,
+                        "operatingHours": 100,
+                        "operationalData": "FTE",
+                        "postcode": "2000",
+                        "totalGLA": 45000
+                      },
+                      "premiseType": "Warehouse and cold store",
+                      "ratingType": "Energy",
+                      "targetStar": "4.5"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "reversecalculatorcalculate_premiseInputs": {
+        "type": "object",
+        "properties": {
+          "annualTurnoverRatio": {
+            "type": "number",
+            "example": 45
+          },
+          "area": {
+            "type": "string",
+            "example": "4000"
+          },
+          "coldRoomVolume": {
+            "type": "number",
+            "example": 4500
+          },
+          "coldstorePresence": {
+            "type": "boolean",
+            "example": true
+          },
+          "conditionedGLA": {
+            "type": "number",
+            "example": 450
+          },
+          "coolRoomVolume": {
+            "type": "number",
+            "example": 450
+          },
+          "fullTimeEmployees": {
+            "type": "number",
+            "example": 4500
+          },
+          "nonconditionedGLA": {
+            "type": "number",
+            "example": 450
+          },
+          "operatingHours": {
+            "type": "number",
+            "example": 100
+          },
+          "operationalData": {
+            "type": "string",
+            "example": "FTE"
+          },
+          "postcode": {
+            "type": "string",
+            "example": "2000"
+          },
+          "totalGLA": {
+            "type": "number",
+            "example": 45000
+          }
+        }
+      },
+      "ratingcalculatorcalculate_ratingInputs_energyInputs": {
+        "type": "object",
+        "properties": {
+          "diesel": {
+            "type": "string",
+            "example": "0.00"
+          },
+          "electricity": {
+            "type": "string",
+            "example": "122.00"
+          },
+          "gas": {
+            "type": "string",
+            "example": "0.00"
+          }
+        }
+      },
+      "ratingcalculator_calculate_body": {
+        "type": "object",
+        "properties": {
+          "control": {
+            "$ref": "#/components/schemas/ratingcalculatorcalculate_control"
+          },
+          "ratingInputs": {
+            "$ref": "#/components/schemas/ratingcalculatorcalculate_ratingInputs"
+          }
+        }
+      },
+      "ratingcalculatorcalculate_control": {
+        "type": "object",
+        "properties": {
+          "BuildingAddress": {
+            "type": "string",
+            "example": "12 Darcy street, Parramatta NSW - 2150"
+          },
+          "CompanyName": {
+            "type": "string",
+            "example": "DPE"
+          },
+          "EmailAddress": {
+            "type": "string",
+            "example": "naberstest@environment.nsw.gov.au"
+          },
+          "SiteName": {
+            "type": "string",
+            "example": "4 Parramatta Square"
+          },
+          "postcode": {
+            "type": "string",
+            "example": "2150"
+          },
+          "premiseType": {
+            "type": "string",
+            "example": "PI_Childcare_centre"
+          }
+        }
+      },
+      "ratingcalculatorcalculate_ratingInputs": {
+        "type": "object",
+        "properties": {
+          "energyInputs": {
+            "$ref": "#/components/schemas/ratingcalculatorcalculate_ratingInputs_energyInputs"
+          },
+          "netOREGConsumption": {
+            "type": "number",
+            "example": 54212.97
+          },
+          "offsiteLGCsSurrendered": {
+            "type": "number",
+            "example": 333.123
+          },
+          "totalArea": {
+            "type": "string",
+            "example": "112.00"
+          },
+          "totalElectricityExclusions": {
+            "type": "number",
+            "example": 719565.14
+          },
+          "totalElectricityInclusions": {
+            "type": "number",
+            "example": 1274457.25
+          },
+          "totalGasAndLPGExclusions": {
+            "type": "number",
+            "example": 450.55
+          },
+          "totalGasAndLPGInclusions": {
+            "type": "number",
+            "example": 2996857.54
+          },
+          "totalGreenPowerConsumption": {
+            "type": "number",
+            "example": 55027.92
+          },
+          "totalGreenPowerPurchasedSeperately": {
+            "type": "number",
+            "example": 3000
+          },
+          "totalOREGConsumption": {
+            "type": "number",
+            "example": 54212.97
+          },
+          "totalOffsitePurchases": {
+            "type": "number",
+            "example": 10000
+          },
+          "totalOnsiteLGCsExported": {
+            "type": "number",
+            "example": 10
+          }
+        }
+      },
+      "reversecalculatorcalculate_enrConsumptionInputs": {
+        "type": "object",
+        "properties": {
+          "dieselPercentage": {
+            "type": "string",
+            "example": "10"
+          },
+          "electricityPercentage": {
+            "type": "string",
+            "example": "70"
+          },
+          "gasPercentage": {
+            "type": "string",
+            "example": "10"
+          },
+          "lpgPercentage": {
+            "type": "number",
+            "example": 10
+          }
+        }
+      },
+      "reversecalculator_calculate_body": {
+        "type": "object",
+        "properties": {
+          "enrConsumptionInputs": {
+            "$ref": "#/components/schemas/reversecalculatorcalculate_enrConsumptionInputs"
+          },
+          "premiseInputs": {
+            "$ref": "#/components/schemas/reversecalculatorcalculate_premiseInputs"
+          },
+          "premiseType": {
+            "type": "string",
+            "example": "Warehouse and cold store"
+          },
+          "ratingType": {
+            "type": "string",
+            "example": "Energy"
+          },
+          "targetStar": {
+            "type": "string",
+            "example": "4.5"
+          }
+        }
+      }
+    },
+    "securitySchemes": {}
+  }
+}
